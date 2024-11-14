@@ -1,1 +1,12 @@
 
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/banco_desafio?useTimezone=true&serverTimezone=UTC&useLegacyDate
+    username: joao
+    password: minhaSenha
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+
