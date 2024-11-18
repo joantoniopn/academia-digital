@@ -1,12 +1,14 @@
 package me.dio.academia.digital.service;
 
 import me.dio.academia.digital.entity.Aluno;
+import me.dio.academia.digital.entity.AvaliacaoFisica;
 import me.dio.academia.digital.entity.form.AlunoForm;
 import me.dio.academia.digital.entity.form.AlunoUpdateForm;
 import me.dio.academia.digital.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -42,5 +44,12 @@ public class AlunoServiceImpl implements IAlunoService {
     @Override
     public void delete(Long id) {
 
+    }
+
+    @Override
+    public List<AvaliacaoFisica> getAllAvaliacaoFisicaPorIdAluno(Long id) {
+        Aluno aluno = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado."));
+        return aluno.getAvaliacoes();
     }
 }
