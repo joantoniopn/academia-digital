@@ -1,14 +1,18 @@
-package me.dio.academia.digital.service;
+package me.dio.academia.digital.service.impl;
 
 import me.dio.academia.digital.entity.Aluno;
 import me.dio.academia.digital.entity.AvaliacaoFisica;
 import me.dio.academia.digital.entity.form.AlunoForm;
 import me.dio.academia.digital.entity.form.AlunoUpdateForm;
+import me.dio.academia.digital.exception.CpfJaCadastradoException;
+import me.dio.academia.digital.infra.utils.JavaTimeUtils;
 import me.dio.academia.digital.repository.AlunoRepository;
+import me.dio.academia.digital.service.IAlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,32 +22,51 @@ public class AlunoServiceImpl implements IAlunoService {
 
     @Override
     public Aluno create(AlunoForm form) {
+
+        repository.findByCpf(form.getCpf()).ifPresent(aluno -> {
+            throw new CpfJaCadastradoException("O CPF já está cadastrado: " + form.getCpf());
+        });
+
         Aluno aluno = new Aluno();
         aluno.setNome(form.getNome());
         aluno.setCpf(form.getCpf());
         aluno.setBairro(form.getBairro());
         aluno.setDataDeNascimento(form.getDataDeNascimento());
+
         return repository.save(aluno);
     }
 
     @Override
-    public Aluno get(Long id) {
-        return null;
+    public Aluno getById(Long id) {
+        return repository.getById(id);
     }
 
     @Override
-    public List<Aluno> getAll() {
+    public List<Aluno> getAll(String dataDeNascimento) {
+        if(dataDeNascimento != null) {
+            LocalDate localDate = LocalDate.parse(dataDeNascimento, JavaTimeUtils.LOCAL_DATE_FORMATTER);
+            return repository.findByDataDeNascimento(localDate);
+        }
         return repository.findAll();
     }
 
     @Override
     public Aluno update(Long id, AlunoUpdateForm formUpdate) {
-        return null;
+        Aluno aluno = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
+
+        aluno.setNome(formUpdate.getNome());
+        aluno.setBairro(formUpdate.getBairro());
+        aluno.setDataDeNascimento(formUpdate.getDataDeNascimento());
+
+        return repository.save(aluno);
     }
 
     @Override
     public void delete(Long id) {
-
+        Aluno aluno = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
+        repository.delete(aluno);
     }
 
     @Override

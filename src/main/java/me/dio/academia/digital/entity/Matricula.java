@@ -23,6 +23,6 @@ public class Matricula {
   @JoinColumn(name = "Aluno_Id")
   private Aluno aluno;
 
-  @Column(name = "Data_Da_Matricula")
-  private LocalDateTime dataDaMatricula = LocalDateTime.now();
+  @Column(name = "Data_Matricula")
+  private LocalDateTime dataMatricula = LocalDateTime.now();
 }

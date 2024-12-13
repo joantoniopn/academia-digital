@@ -19,13 +19,13 @@ public interface IAvaliacaoFisicaService {
    * @param id - id da Avaliação Física que será exibida.
    * @return - Avaliação Física de acordo com o Id fornecido.
    */
-  AvaliacaoFisica get(Long id);
+  AvaliacaoFisica getById(Long id);
 
   /**
    * Retorna todas as Avaliações Física que estão no banco de dados.
    * @return - Uma lista com todas as Avaliações Física que estão salvas no DB.
    */
-  List<AvaliacaoFisica> getAll();
+  List<AvaliacaoFisica> getAll(String nome);
 
   /**
    * Atualiza a avaliação física.
